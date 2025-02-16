@@ -33,19 +33,3 @@ func PlaceOrder(c *gin.Context) {
 	})
 }
 
-// 获取用户订单列表
-func GetUserOrders(c *gin.Context) {
-	userID := c.MustGet("user").(*jwt.Token).Claims.(jwt.MapClaims)["user_id"].(float64)
-	db := config.GetDB()
-	var orders []models.Order
-
-	if err := db.Where("user_id = ?", userID).Find(&orders).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法获取订单"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status": "success",
-		"data":   orders,
-	})
-}
